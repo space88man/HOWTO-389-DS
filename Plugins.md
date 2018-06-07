@@ -38,7 +38,7 @@ dnanextvalue: 5000
 
 ## MEP — Managed Entries
 
-Used to auto-magically create a user private group, a 'posixGroup` object, like how
+Used to auto-magically create a user private group, a `posixGroup` object, like how
 `useradd` works with `USERGROUPS_ENAB yes`.
 
 Create the following template:
