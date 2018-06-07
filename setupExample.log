@@ -1,0 +1,184 @@
+[18/06/07:01:58:54] - [Setup] Info This program will set up the 389 Directory and Administration Servers.
+
+It is recommended that you have "root" privilege to set up the software.
+Tips for using this program:
+  - Press "Enter" to choose the default and go to the next screen
+  - Type "Control-B" then "Enter" to go back to the previous screen
+  - Type "Control-C" to cancel the setup program
+
+[18/06/07:01:58:54] - [Setup] Info Would you like to continue with set up?
+[18/06/07:01:58:56] - [Setup] Info yes
+[18/06/07:01:58:56] - [Setup] Info Your system has been scanned for potential problems, missing patches,
+etc.  The following output is a report of the items found that need to
+be addressed before running this software in a production
+environment.
+
+389 Directory Server system tuning analysis version 14-JULY-2016.
+
+NOTICE : System is x86_64-unknown-linux3.10.0-862.3.2.el7.x86_64 (8 processors).
+
+NOTICE : The net.ipv4.tcp_keepalive_time is set to 7200000 milliseconds
+(120 minutes).  This may cause temporary server congestion from lost
+client connections.
+
+[18/06/07:01:58:56] - [Setup] Info Would you like to continue?
+[18/06/07:01:58:57] - [Setup] Info yes
+[18/06/07:01:58:57] - [Setup] Info Choose a setup type:
+
+   1. Express
+       Allows you to quickly set up the servers using the most
+       common options and pre-defined defaults. Useful for quick
+       evaluation of the products.
+
+   2. Typical
+       Allows you to specify common defaults and options.
+
+   3. Custom
+       Allows you to specify more advanced options. This is 
+       recommended for experienced server administrators only.
+
+To accept the default shown in brackets, press the Enter key.
+
+[18/06/07:01:58:57] - [Setup] Info Choose a setup type
+[18/06/07:01:58:59] - [Setup] Info 2
+[18/06/07:01:58:59] - [Setup] Info Enter the fully qualified domain name of the computer
+on which you're setting up server software. Using the form
+<hostname>.<domainname>
+Example: eros.example.com.
+
+To accept the default shown in brackets, press the Enter key.
+
+Warning: This step may take a few minutes if your DNS servers
+can not be reached or if DNS is not configured correctly.  If
+you would rather not wait, hit Ctrl-C and run this program again
+with the following command line option to specify the hostname:
+
+    General.FullMachineName=your.hostname.domain.name
+
+[18/06/07:01:58:59] - [Setup] Info Computer name
+[18/06/07:01:59:06] - [Setup] Info ldap180.example.com
+[18/06/07:01:59:06] - [Setup] Info The servers must run as a specific user in a specific group.
+It is strongly recommended that this user should have no privileges
+on the computer (i.e. a non-root user).  The setup procedure
+will give this user/group some permissions in specific paths/files
+to perform server-specific operations.
+
+If you have not yet created a user and group for the servers,
+create this user and group using your native operating
+system utilities.
+
+[18/06/07:01:59:06] - [Setup] Info System User
+[18/06/07:01:59:07] - [Setup] Info dirsrv
+[18/06/07:01:59:07] - [Setup] Info System Group
+[18/06/07:01:59:08] - [Setup] Info dirsrv
+[18/06/07:01:59:08] - [Setup] Info Server information is stored in the configuration directory server.
+This information is used by the console and administration server to
+configure and manage your servers.  If you have already set up a
+configuration directory server, you should register any servers you
+set up or create with the configuration server.  To do so, the
+following information about the configuration server is required: the
+fully qualified host name of the form
+<hostname>.<domainname>(e.g. hostname.example.com), the port number
+(default 389), the suffix, the DN and password of a user having
+permission to write the configuration information, usually the
+configuration directory administrator, and if you are using security
+(TLS/SSL).  If you are using TLS/SSL, specify the TLS/SSL (LDAPS) port
+number (default 636) instead of the regular LDAP port number, and
+provide the CA certificate (in PEM/ASCII format).
+
+If you do not yet have a configuration directory server, enter 'No' to
+be prompted to set up one.
+
+[18/06/07:01:59:08] - [Setup] Info Do you want to register this software with an existing
+configuration directory server?
+[18/06/07:01:59:10] - [Setup] Info no
+[18/06/07:01:59:10] - [Setup] Info Please enter the administrator ID for the configuration directory
+server.  This is the ID typically used to log in to the console.  You
+will also be prompted for the password.
+
+[18/06/07:01:59:10] - [Setup] Info Configuration directory server
+administrator ID
+[18/06/07:01:59:12] - [Setup] Info admin
+[18/06/07:01:59:12] - [Setup] Info Password
+[18/06/07:01:59:16] - [Setup] Info Password (confirm)
+[18/06/07:01:59:19] - [Setup] Info The information stored in the configuration directory server can be
+separated into different Administration Domains.  If you are managing
+multiple software releases at the same time, or managing information
+about multiple domains, you may use the Administration Domain to keep
+them separate.
+
+If you are not using administrative domains, press Enter to select the
+default.  Otherwise, enter some descriptive, unique name for the
+administration domain, such as the name of the organization
+responsible for managing the domain.
+
+[18/06/07:01:59:19] - [Setup] Info Administration Domain
+[18/06/07:01:59:32] - [Setup] Info example.com
+[18/06/07:01:59:32] - [Setup] Info The standard directory server network port number is 389.  However, if
+you are not logged as the superuser, or port 389 is in use, the
+default value will be a random unused port number greater than 1024.
+If you want to use port 389, make sure that you are logged in as the
+superuser, that port 389 is not in use.
+
+[18/06/07:01:59:32] - [Setup] Info Directory server network port
+[18/06/07:01:59:33] - [Setup] Info 389
+[18/06/07:01:59:33] - [Setup] Info Each instance of a directory server requires a unique identifier.
+This identifier is used to name the various
+instance specific files and directories in the file system,
+as well as for other uses as a server instance identifier.
+
+[18/06/07:01:59:33] - [Setup] Info Directory server identifier
+[18/06/07:01:59:34] - [Setup] Info ldap180
+[18/06/07:01:59:34] - [Setup] Info The suffix is the root of your directory tree.  The suffix must be a valid DN.
+It is recommended that you use the dc=domaincomponent suffix convention.
+For example, if your domain is example.com,
+you should use dc=example,dc=com for your suffix.
+Setup will create this initial suffix for you,
+but you may have more than one suffix.
+Use the directory server utilities to create additional suffixes.
+
+[18/06/07:01:59:34] - [Setup] Info Suffix
+[18/06/07:01:59:38] - [Setup] Info dc=example, dc=com
+[18/06/07:01:59:38] - [Setup] Info Certain directory server operations require an administrative user.
+This user is referred to as the Directory Manager and typically has a
+bind Distinguished Name (DN) of cn=Directory Manager.
+You will also be prompted for the password for this user.  The password must
+be at least 8 characters long, and contain no spaces.
+Press Control-B or type the word "back", then Enter to back up and start over.
+
+[18/06/07:01:59:38] - [Setup] Info Directory Manager DN
+[18/06/07:01:59:39] - [Setup] Info cn=Directory Manager
+[18/06/07:01:59:39] - [Setup] Info Password
+[18/06/07:01:59:47] - [Setup] Info Password (confirm)
+[18/06/07:01:59:52] - [Setup] Info The Administration Server is separate from any of your web or application
+servers since it listens to a different port and access to it is
+restricted.
+
+Pick a port number between 1024 and 65535 to run your Administration
+Server on. You should NOT use a port number which you plan to
+run a web or application server on, rather, select a number which you
+will remember and which will not be used for anything else.
+
+[18/06/07:01:59:52] - [Setup] Info Administration port
+[18/06/07:01:59:54] - [Setup] Info 9830
+[18/06/07:01:59:54] - [Setup] Info The interactive phase is complete.  The script will now set up your
+servers.  Enter No or go Back if you want to change something.
+
+[18/06/07:01:59:54] - [Setup] Info Are you ready to set up your servers?
+[18/06/07:01:59:55] - [Setup] Info yes
+[18/06/07:01:59:55] - [Setup] Info Creating directory server . . .
+[18/06/07:02:00:00] - [Setup] Info Your new DS instance 'ldap180' was successfully created.
+[18/06/07:02:00:00] - [Setup] Info Creating the configuration directory server . . .
+[18/06/07:02:00:01] - [Setup] Info Beginning Admin Server creation . . .
+[18/06/07:02:00:01] - [Setup] Info Creating Admin Server files and directories . . .
+[18/06/07:02:00:01] - [Setup] Info Updating adm.conf . . .
+[18/06/07:02:00:01] - [Setup] Info Updating admpw . . .
+[18/06/07:02:00:01] - [Setup] Info Registering admin server with the configuration directory server . . .
+[18/06/07:02:00:02] - [Setup] Info Updating adm.conf with information from configuration directory server . . .
+[18/06/07:02:00:02] - [Setup] Info Updating the configuration for the httpd engine . . .
+[18/06/07:02:00:02] - [Setup] Info Starting admin server . . .
+[18/06/07:02:00:02] - [Setup] Info The admin server was successfully started.
+[18/06/07:02:00:02] - [Setup] Info Admin server was successfully created, configured, and started.
+[18/06/07:02:00:02] - [Setup] Success Exiting . . .
+Log file is '/tmp/setupfQLnYM.log'
+
