@@ -2,6 +2,8 @@
 
 ## Notes
 
+**Directory server instance does not work with EC certificates**
+
 Add your trust anchors to the NSS database:
 
 ```
@@ -51,5 +53,31 @@ NSSPassPhraseDialog  file:/etc/dirsrv/admin-serv/pin.txt
 NSSCipherSuite +ecdh_ecdsa_aes_128_sha,+ecdh_ecdsa_aes_256_sha,+ecdhe_ecdsa_aes_128_gcm_sha_256,+ecdhe_ecdsa_aes_128_sha,+ecdhe_ecdsa_aes_128_sha_256,+ecdhe_ecdsa_aes_256_gcm_sha_384,+ecdhe_ecdsa_aes_256_sha,+ecdhe_ecdsa_aes_256_sha_384,+ecdhe_rsa_aes_128_gcm_sha_256,+ecdhe_rsa_aes_128_sha,+ecdhe_rsa_aes_128_sha_256,+ecdhe_rsa_aes_256_gcm_sha_384,+ecdhe_rsa_aes_256_sha,+ecdhe_rsa_aes_256_sha_384,+ecdh_rsa_aes_128_sha,+ecdh_rsa_aes_256_sha,+rsa_aes_128_gcm_sha_256,+rsa_aes_128_sha,+rsa_aes_256_gcm_sha_384,+rsa_aes_256_sha
 
 NSSProtocol TLSv1.2
+
+```
+
+## Directory Server
+
+**Use only RSA certificates**
+
+```
+# ss -apnt
+State      Recv-Q Send-Q     Local Address:Port                    Peer Address:Port              
+LISTEN     0      0                      *:9830                               *:*                  
+LISTEN     0      0                     :::636                               :::*                  
+LISTEN     0      0                     :::389                               :::*                  
+
+## testing LDAPS :636, STARTTLS
+ldapsearch -D "cn=Directory Manager" -W -H ldaps://ldap180.example.com -b "cn=config" cn=RSA
+ldapsearch -D "cn=Directory Manager" -W -H ldap://ldap180.example.com -ZZ -b "cn=config" cn=RSA
+
+# RSA, encryption, config
+dn: cn=RSA,cn=encryption,cn=config
+nsSSLToken: internal (software)
+nsSSLPersonalitySSL: ldap-rsa
+nsSSLActivation: on
+objectClass: top
+objectClass: nsEncryptionModule
+cn: RSA
 
 ```
