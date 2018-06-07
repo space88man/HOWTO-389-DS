@@ -66,4 +66,28 @@ managedBase: ou=groups,dc=example,dc=com
 managedTemplate: cn=Posix User-Group Template,ou=Templates,dc=example,dc=com
 ```
 
+The origin `posixAccount` object has the following attributes:
 
+```
+# vagrant, People, example.com
+dn: uid=vagrant,ou=People,dc=example,dc=com
+objectClass: mepOriginEntry
+mepManagedEntry: cn=vagrant,ou=groups,dc=example,dc=com
+```
+
+The managed entry `posixGroup` has the following attributes:
+
+```
+# vagrant, Groups, example.com
+dn: cn=vagrant,ou=Groups,dc=example,dc=com
+objectClass: posixGroup
+objectClass: mepManagedEntry
+objectClass: top
+cn: vagrant Group
+cn: vagrant
+gidNumber: 5001
+memberUid: vagrant
+mepManagedBy: uid=vagrant,ou=People,dc=example,dc=com
+```
+
+Notice the `mepManagedEntry` and `mepManagedBy` attributes on origin, and managed entry.
