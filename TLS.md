@@ -44,7 +44,7 @@ we need to add the NSS passphrase to `/etc/dirsrv/admin-serv/pin.txt` for unatte
 
 
 ```
-# the following line iNSSPassPhraseDialog  file:/etc/dirsrv/admin-serv/pin.txt
+# the following line in /etc/dirsrv/admin-serv/nss.conf
 NSSPassPhraseDialog  file:/etc/dirsrv/admin-serv/pin.txt
 
 # the following lines are important in /etc/dirsrv/admin-serv/console.conf
