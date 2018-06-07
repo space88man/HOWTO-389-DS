@@ -27,7 +27,7 @@ certutil -A -n ldap180-serv -t u,u,u -d $DIR -a
 
 CA Certs:
 
-![CA Certs](../master/images/cacert.png)
+![CA Certs](../master/images/cacerts.png)
 
 Admin Server cert:
 
