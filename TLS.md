@@ -15,7 +15,10 @@ certutil -A -n root-ca -t CT,, -d $DIR -a -i ~user/root-ca.pem
 certutil -A -n intermediate-ca -t CT,, -d $DIR -a -i ~user/intermediate.pem 
 
 ## generate CSR
+### RSA-2048
 certutil -R -s 'CN=ldap180.example.com' -o admin.req -k rsa -d $DIR -a
+### EC prime256v1
+certutil -R -s 'CN=ldap180.example.com ECDSA' -o admin.req -k ec -q nistp256 -d $DIR -a
 
 ## import cert from stdin
 certutil -A -n admin-serv -t u,u,u -d $DIR -a 
