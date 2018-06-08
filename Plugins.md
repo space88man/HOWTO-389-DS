@@ -45,6 +45,12 @@ name as the uid, just like how `useradd` works with `USERGROUPS_ENAB yes`.
 Create the following template:
 
 ```
+# Templates, example.com
+dn: ou=Templates,dc=example,dc=com
+ou: Templates
+objectClass: top
+objectClass: organizationalunit
+
 dn: cn=Posix User-Group Template,ou=Templates,dc=example,dc=com
 objectclass: mepTemplateEntry
 cn: Posix User-Group Template
@@ -98,7 +104,7 @@ Notice the `mepManagedEntry` and `mepManagedBy` attributes on origin, and manage
 This plugin is used to manage the set of `memberOf` attributes in a user object.
 
 When you create a group object and add a user object(uid) as a `member` attribute,
-a reverse `memberOf` attribute is created the corresponding user.
+a reverse `memberOf` attribute is created in the corresponding user.
 This is a back-pointer to the corresponding group.
 
 This convenience plugin allows us to get the list of groups a user belongs to without having to do
@@ -135,7 +141,7 @@ Results:
 ```
 #### Create a groupOfUniqueNames
 # testgrp, vagrant, Groups, example.com
-dn: cn=testgrp,cn=vagrant,ou=Groups,dc=example,dc=com
+dn: cn=testgrp,ou=Groups,dc=example,dc=com
 gidNumber: 3000
 description: Test Group for memberOf plugin
 objectClass: groupofuniquenames
@@ -149,5 +155,5 @@ uniqueMember: uid=vagrant,ou=People,dc=example,dc=com
 dn: uid=vagrant,ou=People,dc=example,dc=com
 gidNumber: 5001
 uidNumber: 5001
-memberOf: cn=testgrp,cn=vagrant,ou=Groups,dc=example,dc=com
+memberOf: cn=testgrp,ou=Groups,dc=example,dc=com
 ```
