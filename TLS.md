@@ -4,28 +4,30 @@
 
 **Directory server instance does not work with EC certificates**
 
+`ldap180` is the name of our test Directory Server instance.
+
 Add your trust anchors to the NSS database:
 
 ```
-certutil -d $DIR -K # to list keys
-certutil -d $DIR -L # to list certs
-
 # $DIR is where the admin server or directory server instance are located
 # E.g., /etc/dirsrv/admin-serv /etc/dirsrv/slapd-ldap180
 
+certutil -d $DIR -K # to list keys
+certutil -d $DIR -L # to list certs
+
 certutil -A -n root-ca -t CT,, -d $DIR -a -i ~user/root-ca.pem
-certutil -A -n intermediate-ca -t CT,, -d $DIR -a -i ~user/intermediate.pem 
+certutil -A -n intermediate-ca -t CT,, -d $DIR -a -i ~user/intermediate.pem
 
 ## generate CSR
 ### RSA-2048
-certutil -R -s 'CN=ldap180.example.com' -o admin.req -k rsa -d $DIR -a
+certutil -R -s 'CN=ldap180.example.com' -o example.req -k rsa -d $DIR -a
 ### EC prime256v1
-certutil -R -s 'CN=ldap180.example.com ECDSA' -o admin.req -k ec -q nistp256 -d $DIR -a
+certutil -R -s 'CN=ldap180.example.com ECDSA' -o example.req -k ec -q nistp256 -d $DIR -a
 
 ## import cert from stdin
-certutil -A -n admin-serv -t u,u,u -d $DIR -a 
+certutil -A -n admin-serv -t u,u,u -d $DIR -a
 # OR
-certutil -A -n ldap180-serv -t u,u,u -d $DIR -a 
+certutil -A -n ldap180-serv -t u,u,u -d $DIR -a
 ```
 
 ## Admin Server
@@ -46,6 +48,9 @@ we need to add the NSS passphrase to `/etc/dirsrv/admin-serv/pin.txt` for unatte
 
 
 ```
+# pin.txt; where XXXXXXXX is the NSS db password
+echo 'internal:XXXXXXXX' > /etc/dirsrv/admin-serv/pin.txt
+
 # the following line in /etc/dirsrv/admin-serv/nss.conf
 NSSPassPhraseDialog  file:/etc/dirsrv/admin-serv/pin.txt
 
@@ -61,11 +66,14 @@ NSSProtocol TLSv1.2
 **Use only RSA certificates**
 
 ```
+echo 'Internal (Software) Token:XXXXXXXX' > /etc/dirsrv/slapd-ldap180/pin.txt
+
+
 # ss -apnt
-State      Recv-Q Send-Q     Local Address:Port                    Peer Address:Port              
-LISTEN     0      0                      *:9830                               *:*                  
-LISTEN     0      0                     :::636                               :::*                  
-LISTEN     0      0                     :::389                               :::*                  
+State      Recv-Q Send-Q     Local Address:Port                    Peer Address:Port
+LISTEN     0      0                      *:9830                               *:*
+LISTEN     0      0                     :::636                               :::*
+LISTEN     0      0                     :::389                               :::*
 
 ## testing LDAPS :636, STARTTLS
 ldapsearch -D "cn=Directory Manager" -W -H ldaps://ldap180.example.com -b "cn=config" cn=RSA

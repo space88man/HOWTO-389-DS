@@ -2,17 +2,18 @@
 
 This is a useful set of plugins if you want LDAP to
 behave as a unix identity provider ("looks like `/etc/passwd`").
+With these plugins, it should behave well with `pam_ldap` or `pam_sssd`.
 
 ## DNA — Distributed Numeric Assignment
 
-Used to auto-generate POSIX uids, gids for user accounts.
+Used to generate auto-incrementing POSIX uids, gids for user accounts.
 Enable the DNA plugin, add the following LDIF, and restart the server.
 
 When you add a user, set the uid/gid to 99999/99999 and they will be replaced
 by the auto-generated ones.
 
 ```
-[root@b9384fa19c2f ldap]# cat dna.ldif 
+[root@b9384fa19c2f ldap]# cat dna.ldif
 # uids
 dn: cn=UID numbers,cn=Distributed Numeric Assignment Plugin,cn=plugins,cn=config
 objectClass: top
@@ -38,8 +39,8 @@ dnanextvalue: 5000
 
 ## MEP — Managed Entries
 
-Used to auto-magically create a user private group, a `posixGroup` object, like how
-`useradd` works with `USERGROUPS_ENAB yes`.
+Used to auto-magically create a user private group, a `posixGroup` object with the same
+name as the uid, just like how `useradd` works with `USERGROUPS_ENAB yes`.
 
 Create the following template:
 
@@ -91,3 +92,62 @@ mepManagedBy: uid=vagrant,ou=People,dc=example,dc=com
 ```
 
 Notice the `mepManagedEntry` and `mepManagedBy` attributes on origin, and managed entry.
+
+## memberOf Plugin
+
+This plugin is used to manage the set of `memberOf` attributes in a user object.
+
+When you create a group object and add a user object(uid) as a `member` attribute,
+a reverse `memberOf` attribute is created the corresponding user.
+This is a back-pointer to the corresponding group.
+
+This convenience plugin allows us to get the list of groups a user belongs to without having to do
+a complicated search.
+
+Note: For posixGroup objects(actually groupOfUniqueNames proxy object is used) it is more natural to use `uniquemember` instead of `member`.
+
+Configuration, let's configure the plugin in the DIT:
+
+```
+# add this attribute
+# MemberOf Plugin, plugins, config
+
+dn: cn=MemberOf Plugin,cn=plugins,cn=config
+changetype: modify
+add: nsslapd-pluginConfigArea
+nsslapd-pluginConfigArea: cn=MemberOf Plugin Configuration,ou=Templates,dc=example,dc=com
+
+# configuration using a separate object, instead of the plugin object
+# add this object to the tree
+# the ou=Templates came from the MEP plugin
+
+dn: cn=MemberOf Plugin Configuration,ou=Templates,dc=example,dc=com
+objectClass: top
+objectClass: extensibleObject
+cn: MemberOf Plugin Configuration
+memberofgroupattr: uniquemember
+memberofattr: memberOf
+```
+
+
+Results:
+
+```
+#### Create a groupOfUniqueNames
+# testgrp, vagrant, Groups, example.com
+dn: cn=testgrp,cn=vagrant,ou=Groups,dc=example,dc=com
+gidNumber: 3000
+description: Test Group for memberOf plugin
+objectClass: groupofuniquenames
+objectClass: top
+objectClass: posixgroup
+cn: testgrp
+uniqueMember: uid=vagrant,ou=People,dc=example,dc=com
+
+#### look what happens to user vagrant
+# vagrant, People, example.com
+dn: uid=vagrant,ou=People,dc=example,dc=com
+gidNumber: 5001
+uidNumber: 5001
+memberOf: cn=testgrp,cn=vagrant,ou=Groups,dc=example,dc=com
+```
