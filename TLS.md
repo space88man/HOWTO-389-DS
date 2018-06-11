@@ -2,7 +2,8 @@
 
 ## Notes
 
-**Directory server instance does not work with EC certificates**
+**Directory server instance does not work with EC certificates**:
+2018-06-11 — now fixed in upstream and Fedora 28/29 Koji builds. No EL7 build yet.
 
 `ldap180` is the name of our test Directory Server instance.
 
