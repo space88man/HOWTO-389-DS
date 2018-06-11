@@ -120,3 +120,35 @@ Console:
 
 ![389-console](../master/images/console2.png)
 
+
+## Hashed Passwords
+
+New versions of 389-DS use the `PBKDF2_SHA256` hashed password scheme.
+The `userPassword` attr will look like
+
+```
+# output by ldapsearch as base64 encoded
+userPassword: e1BCS0RGMl9TSEEyNTZ9QUFBSUFFR0JaRUI3aTlKY0xqd04zb1MvKzlSYXNLb1J
+ xSk43QnNvYitFT3huY21weVF6QWlhNWRUanJhdm9vMG9iQTF2dXpsYXlMZVpRL292VkdLTEN5b0FC
+ UEVPWU83ejBUbW9wTXdEQ3lkZ2RxdzlsSkN5QmVXaUxuSE13VysrY2dvbEl3WE1YNlQ2OFE1SEdsR
+ 2cvS3h0VXQ3Z0YzbmdlWGhqS2dGbTNtSlFtY1lmTFJmRWExNWM5djJPSGRCaWxkL0FCeEkzVEZEK3
+ ZMQmp4UjNOQmFUWVlwU3BUTUo2K3NJL3AvZUh2RmdVRFA4QVNVOVRlK0RSRS9QRlpqNGRycms1LzN
+ lRnVaZUNnM0JSblVQZEhvdm9LVFVBVVY3T2NzckxoZGtXZXRXM21FdE5FMjdrdFBtc3h5eTVCWEVJ
+ N3hkMmpxazhHdkdLOUpxWWQwWjV2cS82ODZ6SE8zQTVSZ3NnWm4waFd1aXVRZGhCNFR3WlpMNU9Id
+ UFkSytXazBHWU4rUHF3RHhyWU9SNkYwWExxOHlBSnhiMjVLTnBjUkFveHJMbzhJVlNUVHRk
+ 
+# userPassword: actual value
+{PBKDF2_SHA256}AAAIAOdYlzx5TrqsOw1e8zCLwuTk24yC9\
+EmBt/UUPl4RNrfUiiE9ugh7gD3VLonI8ynV6TxHDzX1TVf2w\
+UB36aIGmedPne1K8FIjLt5XzxedpVAjx0yM7OXk+UlkIunil\
++GbAF7xQ7tvvJomWUzv0xjFqsBbw4AMDubByAY4Bf48kJazr\
+ABGBviam2u3Xz9ced4yqnsNfFONeWCpH+B6Ha81QLdC1cbD0\
+7w23qEWpwDJRwEuUpUDt6TJ2SfrPQ0F/OPwrh2gslbpmhVCa\
+m7fqsI1wC8Ye2aeVZq61jaQD7cHeDff5NHVIrh0vA+F/sRU8\
+6TeVYfNtpd0NWe+8Z6NElf4PuqhtlMsOGXd34TkJg3h4ofHf\
+yxvT6CwSvOuoIkUTuVtHvpxiiBHfwD2WTg5ggcfXh9iKz4Ag\
+5UPPvPBXbhT9H/L
+```
+
+The value is 324 bytes long. It is the PBKDF2 hash of the
+password formatted as `iteration count(4) + salt(64) + hash(256)`.
