@@ -150,7 +150,7 @@ yxvT6CwSvOuoIkUTuVtHvpxiiBHfwD2WTg5ggcfXh9iKz4Ag\
 5UPPvPBXbhT9H/L
 ```
 
-The value is 324 bytes long. It is the PBKDF2 hash of the
+The value is 324 bytes long. It is the PBKDF2 hash(output length = 256) of the
 password formatted as `iteration count(4) + salt(64) + hash(256)`.
 
 ```
