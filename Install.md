@@ -152,3 +152,8 @@ yxvT6CwSvOuoIkUTuVtHvpxiiBHfwD2WTg5ggcfXh9iKz4Ag\
 
 The value is 324 bytes long. It is the PBKDF2 hash of the
 password formatted as `iteration count(4) + salt(64) + hash(256)`.
+
+```
+$ pwdhash Secret123
+{PBKDF2_SHA256}AAAgALlADr1cDJD5O1lP9WY+3sp0188V+TCtouqydtyNiii0e7TweMA3mWzy3Y8rYcs3oKNxCU6zNwIH9iKGJ3c1TvW/uU2ZP8s8qSw/HRL/nfNHKLo2NIn7tViXxpfnByN82yHyXRVVakvm58r4THyUgID6YzqUxR9Io+seIzkP2/+lCRiZVVkVNM+uIly/+pdfhWJxyNtkh6FH7DuuCAJjCNohmk5dWlryZmkUZH3vjhl2SeBAiTPh9qCk3JFKWlYBcaPmkRJ4lq1LI7TzMFv0V6JpqS8zhfjXTneWGBJxHCdre3VFVeJJcWLGOchAYMXA8AaYCGqGxHsqJx+xlg0KALM/hq/PSCB2a/b+CbBbJH5gQiBFfYJRTjXyuvnx4qhmKeCI1ug/A2DfvS1+F48+KVcSiR8XSy3c+EdeMxv4LTeD
+```
