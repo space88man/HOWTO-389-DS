@@ -2,11 +2,15 @@
 
 ## Notes
 
+2019-01-12 — `ldap180` is the name of our test Directory Server instance.
+Newer versions of this document reference another
+instance `ldap51` with DNS `389ds.example.biz`.
+
 2018-06-11 — v1.40: EC certs are supported; the `nsSSL3Ciphers` attr of `cn=encryption,cn=config`
 is important to get right to support EC and TLSv1.3.
 
-`ldap180` is the name of our test Directory Server instance.
 
+## NSS Stuff for TLS
 Add your trust anchors to the NSS database:
 
 ```
@@ -38,14 +42,14 @@ certutil -A -n ldap180-serv -t u,u,u -d $DIR -a
 
 ## 389-Console
 
-Verbose mode:
+When TLS is enabled, SLF4J is needed by JSS.
 
 ```
-## Obtain logging jars
-wget http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar
-wget http://central.maven.org/maven2/org/slf4j/slf4j-simple/1.7.25/slf4j-simple-1.7.25.jar
+## Ensure slf4j is available:
+$ rpm -q slf4j
+slf4j-1.7.25-5.fc29.noarch
 
-VERBOSE=1 CLASSPATH=slf4j-api-1.7.25.jar:slf4j-simple-1.7.25.jar /usr/bin/389-console
+VERBOSE=1 CLASSPATH=/usr/share/java/slf4j/slf4j-api.jar:/usr/share/java/slf4j/slf4j-simple.jar /usr/bin/389-console
 
 # you may be prompted to add the TLS trust anchors...
 
@@ -55,11 +59,36 @@ main class used: com.netscape.management.client.console.Console
 flags used:
 options used:
 arguments used:
+
+# without SLF4J installed you will get a Java Exception here and the login
+# window will hang :-(
 [main] INFO org.mozilla.jss.CryptoManager - CryptoManager: loading JSS library
 [main] INFO org.mozilla.jss.CryptoManager - CryptoManager: loaded JSS library from /usr/lib64/jss/libjss4.so
 [main] INFO org.mozilla.jss.CryptoManager - CryptoManager: initializing NSS database at /home/user/.389-console/
 
 ```
+
+Error without slf4j in the class path:
+```
+Exception in thread "main" java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory
+	at org.mozilla.jss.CryptoManager.<clinit>(CryptoManager.java:52)
+	at com.netscape.management.client.util.UtilConsoleGlobals.initJSS(Unknown Source)
+	at com.netscape.management.client.comm.HttpsChannel.<clinit>(Unknown Source)
+	at com.netscape.management.client.comm.HttpManager.createChannel(Unknown Source)
+	at com.netscape.management.client.comm.CommManager.send(Unknown Source)
+	at com.netscape.management.client.comm.HttpManager.get(Unknown Source)
+	at com.netscape.management.client.console.Console.invoke_task(Unknown Source)
+	at com.netscape.management.client.console.Console.authenticate_user(Unknown Source)
+	at com.netscape.management.client.console.Console.<init>(Unknown Source)
+	at com.netscape.management.client.console.Console.main(Unknown Source)
+Caused by: java.lang.ClassNotFoundException: org.slf4j.LoggerFactory
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:382)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 10 more
+```
+
 
 ## Admin Server
 
@@ -193,7 +222,7 @@ SSL-Session:
     Protocol  : TLSv1.2
     Cipher    : ECDHE-ECDSA-AES128-GCM-SHA256
     Session-ID: 0A8440ED85B730591C813418D22180C77B8010B6B369B9BE565D3764473748CC
-    Session-ID-ctx: 
+    Session-ID-ctx:
     Master-Key: B591798760C35D2EF65B56E55648C1B459E90D3C505F959C861AC4E6E4906D8B730C26C89F7B36C5FC2E2EC7B0C6C97F
     PSK identity: None
     PSK identity hint: None
@@ -204,7 +233,7 @@ SSL-Session:
     Extended master secret: no
 ---
 
-$ openssl s_client -connect 389ds.example.biz:9830 -tls1_3  -CAfile truststore.pem 
+$ openssl s_client -connect 389ds.example.biz:9830 -tls1_3  -CAfile truststore.pem
 
 
 <...stuff...>
@@ -213,7 +242,7 @@ BggrBgEFBQcDATAKBggqhkjOPQQDAgNJADBGAiEA91YGzIumynIGV+xlKU0zJ1T+
 W35jNLdFMp4yiS95D+QCIQDg3/5ps4fOHCYSEIyWmnyJVG6JrGv5aOdvyBRi9th7
 UQ==
 -----END CERTIFICATE-----
-subject=DC = biz, DC = example, CN = 389ds.example.bz
+subject=DC = biz, DC = example, CN = 389ds.example.biz
 
 issuer=DC = biz, DC = example, CN = Intermediate CA
 
@@ -242,7 +271,7 @@ Verify return code: 0 (ok)
 TLSv1.2 TLSv1.3 to JSS
 
 ```
-$ openssl s_client -connect 389ds.example.biz:636 -tls1_2  -CAfile truststore.pem
+$ openssl s_client -connect 389ds.example.biz:636 -tls1_3  -CAfile truststore.pem
 
 <...stuff...>
 ---
@@ -264,7 +293,7 @@ Early data was not sent
 Verify return code: 0 (ok)
 ---
 
-$ openssl s_client -connect 389ds.example.biz:636 -tls1_3  -CAfile truststore.pem 
+$ openssl s_client -connect 389ds.example.biz:636 -tls1_2  -CAfile truststore.pem
 
 <...stuff...>
 ---
@@ -286,7 +315,7 @@ SSL-Session:
     Protocol  : TLSv1.2
     Cipher    : ECDHE-ECDSA-AES128-GCM-SHA256
     Session-ID: 0989F017AA0DDF6C90A0A7C8A563A39AD682FE3BBE051177D8C718D626A6A88F
-    Session-ID-ctx: 
+    Session-ID-ctx:
     Master-Key: 9864EB49F538F77052441327D08BD761A1E7EC18AD253D9F4FC98A5BFEA01E39370E109C5CA38D09AD660E40C6604A8A
     PSK identity: None
     PSK identity hint: None
@@ -304,7 +333,7 @@ $ openssl s_client -connect 389ds.example.biz:389 -tls1_3  -CAfile truststore.pe
 <...stuff...>
 UQ==
 -----END CERTIFICATE-----
-subject=DC = biz, DC = example, CN = 389ds.example.bz
+subject=DC = biz, DC = example, CN = 389ds.example.biz
 
 issuer=DC = biz, DC = example, CN = Intermediate CA
 
@@ -349,7 +378,7 @@ SSL-Session:
     Protocol  : TLSv1.2
     Cipher    : ECDHE-ECDSA-AES128-GCM-SHA256
     Session-ID: 0989C19096C3478F385A8E52295E8BA9054C62EA8D14FE2D51365E5B88DAF319
-    Session-ID-ctx: 
+    Session-ID-ctx:
     Master-Key: AF65528F82B3F5ADDE8FBB689B8640E223C0340F0D9CEF4BCAD73945384AB68B8165139A0B33EABD9EF00BFB94439C74
     PSK identity: None
     PSK identity hint: None
