@@ -19,9 +19,30 @@ Install packages:
 389-ds-1.2.2-6.el7.noarch
 389-adminutil-1.1.21-2.el7.x86_64
 389-ds-base-libs-1.3.7.5-21.el7_5.x86_64
+```
 
+## Fedora 29 Installation
 
 ```
+[root@389ds ~]# rpm -qa | grep 389
+389-console-1.1.19-1.fc29.noarch
+389-admin-console-1.1.12-5.fc29.noarch
+389-dsgw-1.1.11-19.fc29.x86_64
+389-adminutil-1.1.23-11.fc29.x86_64
+python3-lib389-1.4.0.20-1.fc29.noarch
+389-ds-base-1.4.0.20-1.fc29.x86_64
+389-admin-1.1.46-2.fc29.x86_64
+389-ds-console-1.2.16-5.fc29.noarch
+389-admin-console-doc-1.1.12-5.fc29.noarch
+389-ds-1.2.2-14.fc29.noarch
+389-ds-base-legacy-tools-1.4.0.20-1.fc29.x86_64
+389-ds-console-doc-1.2.16-5.fc29.noarch
+389-ds-base-libs-1.4.0.20-1.fc29.x86_64
+```
+
+
+## Installation
+
 
 Run interactive installation script:
 ```
@@ -37,9 +58,9 @@ dirsrv@ldap180.service                                 loaded active running   3
 system-dirsrv.slice                                    loaded active active    system-dirsrv.slice
 
 [root@b9384fa19c2f ~]# ss -apnt
-State       Recv-Q Send-Q              Local Address:Port                             Peer Address:Port              
-LISTEN      0      0                               *:9830                                        *:*                  
-LISTEN      0      0                              :::389                                        :::*                  
+State       Recv-Q Send-Q              Local Address:Port                             Peer Address:Port
+LISTEN      0      0                               *:9830                                        *:*
+LISTEN      0      0                              :::389                                        :::*
 
 ## 9830 is a web app, the admin server
 ## 389 is the first directory server
@@ -48,13 +69,13 @@ LISTEN      0      0                              :::389                        
 Smoke-test:
 ```
 [root@b9384fa19c2f ~]# ldapsearch -D 'cn=Directory Manager' -W -b "dc=example,dc=com" dn
-Enter LDAP Password: 
+Enter LDAP Password:
 # extended LDIF
 #
 # LDAPv3
 # base <dc=example,dc=com> with scope subtree
 # filter: (objectclass=*)
-# requesting: dn 
+# requesting: dn
 #
 
 # example.com
@@ -136,7 +157,7 @@ userPassword: e1BCS0RGMl9TSEEyNTZ9QUFBSUFFR0JaRUI3aTlKY0xqd04zb1MvKzlSYXNLb1J
  lRnVaZUNnM0JSblVQZEhvdm9LVFVBVVY3T2NzckxoZGtXZXRXM21FdE5FMjdrdFBtc3h5eTVCWEVJ
  N3hkMmpxazhHdkdLOUpxWWQwWjV2cS82ODZ6SE8zQTVSZ3NnWm4waFd1aXVRZGhCNFR3WlpMNU9Id
  UFkSytXazBHWU4rUHF3RHhyWU9SNkYwWExxOHlBSnhiMjVLTnBjUkFveHJMbzhJVlNUVHRk
- 
+
 # userPassword: actual value
 {PBKDF2_SHA256}AAAIAOdYlzx5TrqsOw1e8zCLwuTk24yC9\
 EmBt/UUPl4RNrfUiiE9ugh7gD3VLonI8ynV6TxHDzX1TVf2w\
