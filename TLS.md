@@ -162,3 +162,203 @@ objectClass: nsEncryptionModule
 cn: RSA
 
 ```
+
+
+## TLS Smoke Tests
+
+### Admin Server
+
+TLSv1.2 TLSv1.3 to Apache mod_nss:
+
+```
+$ openssl s_client -connect 389ds.example.biz:9830 -tls1_2  -CAfile truststore.pem
+
+<...stuff...>
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1745 bytes and written 321 bytes
+Verification: OK
+---
+New, TLSv1.2, Cipher is ECDHE-ECDSA-AES128-GCM-SHA256
+Server public key is 256 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-ECDSA-AES128-GCM-SHA256
+    Session-ID: 0A8440ED85B730591C813418D22180C77B8010B6B369B9BE565D3764473748CC
+    Session-ID-ctx: 
+    Master-Key: B591798760C35D2EF65B56E55648C1B459E90D3C505F959C861AC4E6E4906D8B730C26C89F7B36C5FC2E2EC7B0C6C97F
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    Start Time: 1547345539
+    Timeout   : 7200 (sec)
+    Verify return code: 0 (ok)
+    Extended master secret: no
+---
+
+$ openssl s_client -connect 389ds.example.biz:9830 -tls1_3  -CAfile truststore.pem 
+
+
+<...stuff...>
+1aJEMxqCkjAcBgNVHREEFTATghEzODlkcy5leGFtcGxlLmJpejATBgNVHSUEDDAK
+BggrBgEFBQcDATAKBggqhkjOPQQDAgNJADBGAiEA91YGzIumynIGV+xlKU0zJ1T+
+W35jNLdFMp4yiS95D+QCIQDg3/5ps4fOHCYSEIyWmnyJVG6JrGv5aOdvyBRi9th7
+UQ==
+-----END CERTIFICATE-----
+subject=DC = biz, DC = example, CN = 389ds.example.bz
+
+issuer=DC = biz, DC = example, CN = Intermediate CA
+
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1779 bytes and written 307 bytes
+Verification: OK
+---
+New, TLSv1.3, Cipher is TLS_AES_128_GCM_SHA256
+Server public key is 256 bit
+Secure Renegotiation IS NOT supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+```
+
+### Directory Server
+
+TLSv1.2 TLSv1.3 to JSS
+
+```
+$ openssl s_client -connect 389ds.example.biz:636 -tls1_2  -CAfile truststore.pem
+
+<...stuff...>
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1775 bytes and written 307 bytes
+Verification: OK
+---
+New, TLSv1.3, Cipher is TLS_AES_128_GCM_SHA256
+Server public key is 256 bit
+Secure Renegotiation IS NOT supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+
+$ openssl s_client -connect 389ds.example.biz:636 -tls1_3  -CAfile truststore.pem 
+
+<...stuff...>
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1740 bytes and written 321 bytes
+Verification: OK
+---
+New, TLSv1.2, Cipher is ECDHE-ECDSA-AES128-GCM-SHA256
+Server public key is 256 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-ECDSA-AES128-GCM-SHA256
+    Session-ID: 0989F017AA0DDF6C90A0A7C8A563A39AD682FE3BBE051177D8C718D626A6A88F
+    Session-ID-ctx: 
+    Master-Key: 9864EB49F538F77052441327D08BD761A1E7EC18AD253D9F4FC98A5BFEA01E39370E109C5CA38D09AD660E40C6604A8A
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    Start Time: 1547345707
+    Timeout   : 7200 (sec)
+    Verify return code: 0 (ok)
+    Extended master secret: no
+---
+
+#### Using STARTTLS
+
+$ openssl s_client -connect 389ds.example.biz:389 -tls1_3  -CAfile truststore.pem  -starttls ldap
+
+<...stuff...>
+UQ==
+-----END CERTIFICATE-----
+subject=DC = biz, DC = example, CN = 389ds.example.bz
+
+issuer=DC = biz, DC = example, CN = Intermediate CA
+
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1871 bytes and written 338 bytes
+Verification: OK
+---
+New, TLSv1.3, Cipher is TLS_AES_128_GCM_SHA256
+Server public key is 256 bit
+Secure Renegotiation IS NOT supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+
+$ openssl s_client -connect 389ds.example.biz:389 -tls1_2  -CAfile truststore.pem  -starttls ldap
+
+<...stuff...>
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 1836 bytes and written 352 bytes
+Verification: OK
+---
+New, TLSv1.2, Cipher is ECDHE-ECDSA-AES128-GCM-SHA256
+Server public key is 256 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-ECDSA-AES128-GCM-SHA256
+    Session-ID: 0989C19096C3478F385A8E52295E8BA9054C62EA8D14FE2D51365E5B88DAF319
+    Session-ID-ctx: 
+    Master-Key: AF65528F82B3F5ADDE8FBB689B8640E223C0340F0D9CEF4BCAD73945384AB68B8165139A0B33EABD9EF00BFB94439C74
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    Start Time: 1547345802
+    Timeout   : 7200 (sec)
+    Verify return code: 0 (ok)
+    Extended master secret: no
+---
+
+
+```
