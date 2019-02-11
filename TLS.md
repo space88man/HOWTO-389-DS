@@ -148,6 +148,9 @@ nsSSL3Ciphers: -all,+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,+TLS_ECDHE_RSA_WITH_A
 
 Verify:
 ```
+ldapsearch -D 'cn=Directory Manager' -W -b "cn=config" -o ldif-wrap=no   | grep nsslapd-security
+nsslapd-security: on
+
 ldapsearch -D 'cn=Directory Manager' -W -b "cn=config" -o ldif-wrap=no   | grep nssslenabled
 nssslenabledciphers: TLS_AES_128_GCM_SHA256::AES-GCM::AEAD::128
 nssslenabledciphers: TLS_AES_256_GCM_SHA384::AES-GCM::AEAD::256
